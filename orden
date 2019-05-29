@@ -1,0 +1,61 @@
+// Desarrollado por Felix Ramos
+//odenar matriz unidimensional utilizando gorutinas
+package main
+
+import (
+    "fmt"
+    "sync"
+    "time"
+)
+
+
+func orden(array []int, desde int, hasta int)[]int{
+
+
+	for i := 0; i < hasta; i++ {
+		temporal:=array[i]
+		for j := 0; j < hasta; j++ {
+			if(temporal<array[j]){
+
+				temporal=array[j]
+				array[j]=array[i]
+				array[i]=temporal
+			}
+			//fmt.Println(array[i]," cambio ",array[j])
+		}
+	}
+	array_divsor:=[]int{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+	
+	var temp int
+	for i := desde; i < hasta; i++ {
+		temp=array[i]
+		array_divsor[i] = temp
+	}
+
+	time.Sleep( 300*time.Millisecond)
+
+	return array_divsor
+}
+
+func main() {
+	array:=[]int{4,9,6,7,4,3,9,6,4,2,8,3,4,6,7,9}
+	
+	// Inicializar una variable de grupo de espera
+	var wg sync.WaitGroup
+	// `Add (1) significa que hay 1 tarea que debemos esperar
+	wg.Add(1)
+	go func() {
+		  fmt.Println("array 1> ",orden(array,0,4))
+		  fmt.Println("array 2> ",orden(array,4,8))
+		  fmt.Println("array 3> ",orden(array,8,12))
+		  fmt.Println("array 4> ",orden(array,12,16))
+		  fmt.Println("array juntado> ",orden(array,0,len(array)))
+		// Llamar a `wg.Done` indica que hemos terminado con la tarea que estamos esperando para
+		wg.Done()
+	}()
+	// `wg.Wait` bloquea hasta que` wg.Done` se llame el mismo número de veces
+	// como la cantidad de tareas que tenemos (en este caso, 1 vez)
+	wg.Wait()
+ 
+}
+
